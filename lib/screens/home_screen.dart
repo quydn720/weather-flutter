@@ -19,10 +19,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () {},
+          ),
           centerTitle: true,
           title: Text(
             '${weather.city}, ${weather.country}',
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(24.0),
