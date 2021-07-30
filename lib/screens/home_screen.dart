@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,96 +18,107 @@ class _HomeScreenState extends State<HomeScreen> {
     WeatherModel weather = widget.weather;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          '${weather.city}, ${weather.country}',
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            '${weather.city}, ${weather.country}',
+          ),
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Card(
-              color: Color(0xff5772FF),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Heavy Rain'),
-                        Text('Morning'),
-                      ],
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TwoHeaderWidget(
+                  children: [
+                    Text(
+                      'Friday',
+                      style: kBoldTextStyle,
                     ),
-                  ),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        '29',
-                        style: TextStyle(
-                          fontSize: 60.0,
-                        ),
-                      ),
-                      Text(
-                        'Feel like 30',
-                      ),
-                    ],
-                  ),
-                ],
+                    Text(
+                      '04 September',
+                      style: kTextStyle,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: OutlinedButton(
-              onPressed: () {},
-              child:
-                  Image.network('http://openweathermap.org/img/wn/10d@2x.png'),
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: Column(
+              Divider(
+                color: Colors.black,
+                thickness: 2.0,
+                indent: 25.0,
+                endIndent: 25.0,
+              ),
+              Expanded(
+                flex: 3,
+                child: TwoHeaderWidget(
+                  children: [
+                    Image.network(
+                        'http://openweathermap.org/img/wn/10d@2x.png'),
+                    Text(weather.temperature.toString(),
+                        style: kTextStyle.copyWith(
+                          fontSize: kTextSizeLarge,
+                        )),
+                    Text(
+                      weather.description,
+                      style: kTextStyle,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 2.0,
+                indent: 25.0,
+                endIndent: 25.0,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TwoHeaderWidget(
                       children: [
-                        Text('Temp'),
-                        Text(weather.temperature.toString()),
+                        Text(
+                          weather.maxTemperature,
+                          style: kBoldTextStyle,
+                        ),
+                        Text(
+                          weather.minTemperature,
+                          style: kTextStyle,
+                        ),
                       ],
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Card(
-                    child: Column(
+                    TwoHeaderWidget(
                       children: [
-                        Text('Wind'),
-                        Text(weather.windSpeed.toString()),
+                        Text(
+                          '${weather.humidity.toString()}% Humidity',
+                          style: kBoldTextStyle,
+                        ),
+                        Text(
+                          '${weather.windSpeed.toString()} m/s Wind',
+                          style: kTextStyle,
+                        ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-                Expanded(
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Text('Humidity'),
-                        Text('${weather.humidity.toString()}%'),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ));
+  }
+}
+
+class TwoHeaderWidget extends StatelessWidget {
+  final List<Widget> children;
+
+  TwoHeaderWidget({required this.children});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
     );
   }
 }

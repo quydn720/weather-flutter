@@ -1,6 +1,7 @@
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/services/weather.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -31,17 +32,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      child: OutlinedButton(
-        style: ButtonStyle(),
-        onPressed: () {},
-        child: Text(
-          'today weather',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
+    return Center(
+      child: SpinKitFadingCircle(
+        color: Colors.black,
+        size: 100.0,
       ),
     );
   }
