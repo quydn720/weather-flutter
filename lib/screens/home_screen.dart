@@ -16,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     WeatherModel weather = widget.weather;
-
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -64,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: TwoHeaderWidget(
                   children: [
                     Image.network(
-                        'http://openweathermap.org/img/wn/10d@2x.png'),
+                        'http://openweathermap.org/img/wn/${weather.icon}@2x.png'),
                     Text(weather.temperature.toString(),
                         style: kTextStyle.copyWith(
                           fontSize: kTextSizeLarge,
