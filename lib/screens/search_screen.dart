@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/constants.dart';
+import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
 class SearchScreen extends StatefulWidget {
