@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.list),
@@ -75,85 +76,128 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: TwoHeaderWidget(
-                  children: [
-                    Text(
-                      'Friday',
-                      style: kBoldTextStyle,
-                    ),
-                    Text(
-                      '04 September',
-                      style: kTextStyle,
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 2.0,
-                indent: 25.0,
-                endIndent: 25.0,
-              ),
-              Expanded(
-                flex: 3,
-                child: TwoHeaderWidget(
-                  children: [
-                    getIconFromNetwork(icon),
-                    Text(temp.toString(),
-                        style: kTextStyle.copyWith(
-                          fontSize: kTextSizeLarge,
-                        )),
-                    Text(
-                      description,
-                      style: kTextStyle,
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-                thickness: 2.0,
-                indent: 25.0,
-                endIndent: 25.0,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TwoHeaderWidget(
-                      children: [
-                        Text(
-                          maxTemp,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Friday',
                           style: kBoldTextStyle,
                         ),
-                        Text(
-                          minTemp,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '04 September',
                           style: kTextStyle,
                         ),
-                      ],
-                    ),
-                    TwoHeaderWidget(
-                      children: [
-                        Text(
-                          '${humidity.toString()}% Humidity',
-                          style: kBoldTextStyle,
-                        ),
-                        Text(
-                          '${windSpeed.toString()} m/s Wind',
-                          style: kTextStyle,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Divider(
+                    color: Colors.black,
+                    thickness: 2.0,
+                    indent: 25.0,
+                    endIndent: 25.0,
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 2, child: getIconFromNetwork(icon)),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          temp.toString(),
+                          style: kTextStyle.copyWith(
+                            fontSize: kTextSizeLarge,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 16.0),
+                        child: Expanded(
+                          child: Text(
+                            description,
+                            style: kTextStyle,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Colors.black,
+                    thickness: 2.0,
+                    indent: 25.0,
+                    endIndent: 25.0,
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                maxTemp,
+                                style: kBoldTextStyle,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                minTemp,
+                                style: kTextStyle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${humidity.toString()}% Humidity',
+                                style: kBoldTextStyle,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${windSpeed.toString()} m/s Wind',
+                                style: kTextStyle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ));
   }
@@ -172,7 +216,6 @@ class TwoHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
