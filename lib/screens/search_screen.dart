@@ -13,7 +13,7 @@ class _SearchScreenState extends State<SearchScreen> {
   late final WeatherModel weather;
   Future<void> getInitialData(String city) async {
     var weatherData = await weatherService.getWeatherByCity(city);
-    weather = weatherService.parse(weatherData);
+    weather = WeatherModel.fromJson(weatherData);
   }
 
   @override

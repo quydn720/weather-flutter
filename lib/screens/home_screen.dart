@@ -62,8 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 flex: 3,
                 child: TwoHeaderWidget(
                   children: [
-                    Image.network(
-                        'http://openweathermap.org/img/wn/${weather.icon}@2x.png'),
+                    getIconFromNetwork(weather.icon),
                     Text(weather.temperature.toString(),
                         style: kTextStyle.copyWith(
                           fontSize: kTextSizeLarge,
@@ -115,6 +114,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ));
+  }
+
+  Image getIconFromNetwork(String icon) {
+    return icon == 'icon'
+        ? Image.asset('assets/sunny.png')
+        : Image.network('http://openweathermap.org/img/wn/$icon@2x.png');
   }
 }
 

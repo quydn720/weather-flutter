@@ -22,17 +22,17 @@ class WeatherService {
 }
 
 class WeatherModel {
-  String temperature;
-  String minTemperature;
-  String maxTemperature;
-  double windSpeed;
-  int humidity;
-  String country;
-  String city;
-  String description;
-  String icon;
+  final String temperature;
+  final String minTemperature;
+  final String maxTemperature;
+  final double windSpeed;
+  final int humidity;
+  final String country;
+  final String city;
+  final String description;
+  final String icon;
 
-  WeatherModel({
+  const WeatherModel({
     required this.icon,
     required this.temperature,
     required this.country,

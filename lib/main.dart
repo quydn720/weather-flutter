@@ -2,6 +2,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/splash_screen.dart';
+import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
 void main() {
@@ -21,8 +22,13 @@ class _MyAppState extends State<MyApp> {
   Future getInitialData() async {
     return mem.runOnce(() async {
       print('i was called');
-      var weatherData = await weatherService.getWeatherByLocation();
-      weather = WeatherModel.fromJson(weatherData);
+      try {
+        var weatherData = await weatherService.getWeatherByLocation();
+        weather = WeatherModel.fromJson(weatherData);
+      } catch (e) {
+        print(e);
+        weather = errorWeather;
+      }
     });
   }
 
