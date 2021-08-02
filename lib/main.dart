@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/splash_screen.dart';
@@ -7,12 +8,22 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final WeatherService weatherService = WeatherService();
   late final WeatherModel weather;
-  Future<void> getInitialData() async {
-    var weatherData = await weatherService.getWeatherByLocation();
-    weather = weatherService.parse(weatherData);
+  AsyncMemoizer mem = AsyncMemoizer();
+
+  Future getInitialData() async {
+    return mem.runOnce(() async {
+      print('i was called');
+      var weatherData = await weatherService.getWeatherByLocation();
+      weather = WeatherModel.fromJson(weatherData);
+    });
   }
 
   @override
