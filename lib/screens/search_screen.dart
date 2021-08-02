@@ -10,11 +10,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late String cityName;
   final WeatherService weatherService = WeatherService();
-  late final WeatherModel weather;
-  Future<void> getInitialData(String city) async {
-    var weatherData = await weatherService.getWeatherByCity(city);
-    weather = WeatherModel.fromJson(weatherData);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +30,9 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
             TextButton(
-              onPressed: () async {
-                await getInitialData(cityName);
+              onPressed: () {
                 setState(() {
-                  Navigator.pop(context, weather);
-                  print(weather.country);
+                  Navigator.pop(context, cityName);
                 });
               },
               child: Text('Search'),

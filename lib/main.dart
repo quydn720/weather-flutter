@@ -21,7 +21,6 @@ class _MyAppState extends State<MyApp> {
 
   Future getInitialData() async {
     return mem.runOnce(() async {
-      print('i was called');
       try {
         var weatherData = await weatherService.getWeatherByLocation();
         weather = WeatherModel.fromJson(weatherData);

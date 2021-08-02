@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/search_screen.dart';
 import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
@@ -13,9 +14,39 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late WeatherModel weather;
+  late String city;
+  late String country;
+  late String maxTemp;
+  late String minTemp;
+  late String temp;
+  late int humidity;
+  late String description;
+  late double windSpeed;
+  late String icon;
+  @override
+  void initState() {
+    super.initState();
+    weather = widget.weather;
+    updateUI(weather);
+  }
+
+  void updateUI(WeatherModel weather) {
+    setState(() {
+      city = weather.city;
+      country = weather.country;
+      description = weather.description;
+      humidity = weather.humidity;
+      icon = weather.icon;
+      maxTemp = weather.maxTemperature;
+      minTemp = weather.minTemperature;
+      temp = weather.temperature;
+      windSpeed = weather.windSpeed;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    WeatherModel weather = widget.weather;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -24,12 +55,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           centerTitle: true,
           title: Text(
-            '${weather.city}, ${weather.country}',
+            '$city, $country',
           ),
           actions: [
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () async {
+                var city = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                );
+                if (city != null) {
+                  var weatherData =
+                      await WeatherService().getWeatherByCity(city);
+                  weather = WeatherModel.fromJson(weatherData);
+                  updateUI(weather);
+                }
+              },
             ),
           ],
         ),
@@ -62,13 +104,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 flex: 3,
                 child: TwoHeaderWidget(
                   children: [
-                    getIconFromNetwork(weather.icon),
-                    Text(weather.temperature.toString(),
+                    getIconFromNetwork(icon),
+                    Text(temp.toString(),
                         style: kTextStyle.copyWith(
                           fontSize: kTextSizeLarge,
                         )),
                     Text(
-                      weather.description,
+                      description,
                       style: kTextStyle,
                     ),
                   ],
@@ -87,11 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     TwoHeaderWidget(
                       children: [
                         Text(
-                          weather.maxTemperature,
+                          maxTemp,
                           style: kBoldTextStyle,
                         ),
                         Text(
-                          weather.minTemperature,
+                          minTemp,
                           style: kTextStyle,
                         ),
                       ],
@@ -99,11 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     TwoHeaderWidget(
                       children: [
                         Text(
-                          '${weather.humidity.toString()}% Humidity',
+                          '${humidity.toString()}% Humidity',
                           style: kBoldTextStyle,
                         ),
                         Text(
-                          '${weather.windSpeed.toString()} m/s Wind',
+                          '${windSpeed.toString()} m/s Wind',
                           style: kTextStyle,
                         ),
                       ],

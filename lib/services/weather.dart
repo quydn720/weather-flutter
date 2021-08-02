@@ -45,29 +45,34 @@ class WeatherModel {
   });
 
   static WeatherModel fromJson(dynamic data) {
-    double temp = data['main']['temp'];
-    int temperature = temp.toInt();
+    try {
+      double temp = data['main']['temp'];
+      int temperature = temp.toInt();
 
-    temp = data['main']['temp_min'];
-    int minTemperature = temp.toInt();
-    temp = data['main']['temp_max'];
-    int maxTemperature = temp.toInt();
-    double windSpeed = data['wind']['speed'];
-    int humidity = data['main']['humidity'];
-    String country = data['sys']['country'];
-    String city = data['name'];
-    String desc = data['weather'][0]['description'];
-    String icon = data['weather'][0]['icon'];
-    return WeatherModel(
-      icon: icon,
-      temperature: temperature.toString() + '°',
-      country: country,
-      city: city,
-      windSpeed: windSpeed,
-      humidity: humidity,
-      description: desc,
-      maxTemperature: maxTemperature.toString() + '°C',
-      minTemperature: minTemperature.toString() + '°C',
-    );
+      temp = data['main']['temp_min'];
+      int minTemperature = temp.toInt();
+      temp = data['main']['temp_max'];
+      int maxTemperature = temp.toInt();
+      double windSpeed = data['wind']['speed'];
+      int humidity = data['main']['humidity'];
+      String country = data['sys']['country'];
+      String city = data['name'];
+      String desc = data['weather'][0]['description'];
+      String icon = data['weather'][0]['icon'];
+
+      return WeatherModel(
+        icon: icon,
+        temperature: temperature.toString() + '°',
+        country: country,
+        city: city,
+        windSpeed: windSpeed,
+        humidity: humidity,
+        description: desc,
+        maxTemperature: maxTemperature.toString() + '°C',
+        minTemperature: minTemperature.toString() + '°C',
+      );
+    } catch (e) {
+      return errorWeather;
+    }
   }
 }
