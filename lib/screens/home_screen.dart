@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/screens/search_screen.dart';
 import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
@@ -24,6 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late String description;
   late double windSpeed;
   late String icon;
+  late String weekday;
+  late String dayMonth;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
       minTemp = weather.minTemperature;
       temp = weather.temperature;
       windSpeed = weather.windSpeed;
+      DateTime date = DateTime.now();
+
+      weekday = DateFormat().addPattern(DateFormat.WEEKDAY).format(date);
+      dayMonth = DateFormat()
+          .addPattern(DateFormat.DAY)
+          .addPattern(DateFormat.MONTH)
+          .format(date);
     });
   }
 
@@ -89,14 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Friday',
+                          weekday,
                           style: kBoldTextStyle,
                         ),
                       ),
                       Expanded(
                         flex: 1,
                         child: Text(
-                          '04 September',
+                          dayMonth,
                           style: kTextStyle,
                         ),
                       ),
@@ -112,13 +123,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 2, child: getIconFromNetwork(icon)),
+                      Expanded(flex: 3, child: getIconFromNetwork(icon)),
                       Expanded(
-                        flex: 3,
+                        flex: 5,
                         child: Text(
                           temp.toString(),
                           style: kTextStyle.copyWith(
@@ -126,13 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 16.0),
-                        child: Expanded(
-                          child: Text(
-                            description,
-                            style: kTextStyle,
-                          ),
+                      Expanded(
+                        child: Text(
+                          description,
+                          style: kTextStyle,
                         ),
                       ),
                     ],
