@@ -6,7 +6,7 @@ import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -32,6 +32,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void dispose() {
+    mem = AsyncMemoizer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getInitialData(),
@@ -39,14 +45,7 @@ class _MyAppState extends State<MyApp> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(home: Splash());
         } else {
-          return MaterialApp(
-            title: 'Flutter Demo',
-            home: Scaffold(
-              body: HomeScreen(
-                weather: weather,
-              ),
-            ),
-          );
+          return HomeScreen(weather: weather);
         }
       },
     );
