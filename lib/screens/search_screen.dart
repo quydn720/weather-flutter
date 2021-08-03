@@ -22,7 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter city name',
               ),
-              style: kTextStyle,
+              style: kTextStyle.copyWith(color: Colors.black),
               onChanged: (input) {
                 setState(() {
                   cityName = input;

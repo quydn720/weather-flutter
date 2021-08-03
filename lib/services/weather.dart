@@ -22,15 +22,16 @@ class WeatherService {
 }
 
 class WeatherModel {
-  final String temperature;
-  final String minTemperature;
-  final String maxTemperature;
+  final int temperature;
+  final int minTemperature;
+  final int maxTemperature;
   final double windSpeed;
   final int humidity;
   final String country;
   final String city;
   final String description;
   final String icon;
+  final int dt;
 
   const WeatherModel({
     required this.icon,
@@ -42,6 +43,7 @@ class WeatherModel {
     required this.description,
     required this.maxTemperature,
     required this.minTemperature,
+    required this.dt,
   });
 
   static WeatherModel fromJson(dynamic data) {
@@ -59,17 +61,19 @@ class WeatherModel {
       String city = data['name'];
       String desc = data['weather'][0]['description'];
       String icon = data['weather'][0]['icon'];
+      int dt = data['dt'];
 
       return WeatherModel(
         icon: icon,
-        temperature: temperature.toString() + '°',
+        temperature: temperature,
         country: country,
         city: city,
         windSpeed: windSpeed,
         humidity: humidity,
         description: desc,
-        maxTemperature: maxTemperature.toString() + '°C',
-        minTemperature: minTemperature.toString() + '°C',
+        maxTemperature: maxTemperature,
+        minTemperature: minTemperature,
+        dt: dt,
       );
     } catch (e) {
       return errorWeather;
