@@ -1,8 +1,6 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/splash_screen.dart';
-import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
 void main() {
@@ -16,36 +14,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final WeatherService weatherService = WeatherService();
-  late final WeatherModel weather;
-  AsyncMemoizer mem = AsyncMemoizer();
+  late Future<WeatherModel> weather;
 
-  Future getInitialData() async {
-    return mem.runOnce(() async {
-      try {
-        var weatherData = await weatherService.getWeatherByLocation();
-        weather = WeatherModel.fromJson(weatherData);
-      } catch (e) {
-        print(e);
-        weather = errorWeather;
-      }
-    });
+  Future<WeatherModel> getInitialData() async {
+    var location = await weatherService.getWeatherByLocation();
+    return WeatherModel.fromJson(location);
   }
 
   @override
-  void dispose() {
-    mem = AsyncMemoizer();
-    super.dispose();
+  void initState() {
+    weather = getInitialData();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getInitialData(),
+      future: weather,
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(home: Splash());
         } else {
-          return HomeScreen(weather: weather);
+          return HomeScreen(weather: snapshot.data);
         }
       },
     );

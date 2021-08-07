@@ -25,7 +25,7 @@ class WeatherModel {
   final int temperature;
   final int minTemperature;
   final int maxTemperature;
-  final double windSpeed;
+  final String windSpeed;
   final int humidity;
   final String country;
   final String city;
@@ -46,37 +46,38 @@ class WeatherModel {
     required this.dt,
   });
 
-  static WeatherModel fromJson(dynamic data) {
-    try {
-      double temp = data['main']['temp'];
-      int temperature = temp.toInt();
+  static WeatherModel fromJson(Map<String, dynamic> data) {
+    // try {
+    double temp = data['main']['temp'];
+    int temperature = temp.toInt();
 
-      temp = data['main']['temp_min'];
-      int minTemperature = temp.toInt();
-      temp = data['main']['temp_max'];
-      int maxTemperature = temp.toInt();
-      double windSpeed = data['wind']['speed'];
-      int humidity = data['main']['humidity'];
-      String country = data['sys']['country'];
-      String city = data['name'];
-      String desc = data['weather'][0]['description'];
-      String icon = data['weather'][0]['icon'];
-      int dt = data['dt'];
+    temp = data['main']['temp_min'];
+    int minTemperature = temp.toInt();
+    temp = data['main']['temp_max'];
+    int maxTemperature = temp.toInt();
+    String windSpeed = data['wind']['speed'].toString();
+    int humidity = data['main']['humidity'];
+    String country = data['sys']['country'];
+    String city = data['name'];
+    String desc = data['weather'][0]['description'];
+    String icon = data['weather'][0]['icon'];
+    int dt = data['dt'];
 
-      return WeatherModel(
-        icon: icon,
-        temperature: temperature,
-        country: country,
-        city: city,
-        windSpeed: windSpeed,
-        humidity: humidity,
-        description: desc,
-        maxTemperature: maxTemperature,
-        minTemperature: minTemperature,
-        dt: dt,
-      );
-    } catch (e) {
-      return errorWeather;
-    }
+    return WeatherModel(
+      icon: icon,
+      temperature: temperature,
+      country: country,
+      city: city,
+      windSpeed: windSpeed,
+      humidity: humidity,
+      description: desc,
+      maxTemperature: maxTemperature,
+      minTemperature: minTemperature,
+      dt: dt,
+    );
+    //}
+    // catch (e) {
+    //   return errorWeather;
+    // }
   }
 }
