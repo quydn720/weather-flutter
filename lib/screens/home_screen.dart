@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String temp;
   late int humidity;
   late String description;
-  late double windSpeed;
+  late String windSpeed;
   late String icon;
   late String weekday;
   late String dayMonth;

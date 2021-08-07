@@ -27,7 +27,7 @@ const WeatherModel errorWeather = WeatherModel(
     temperature: 0,
     country: 'country',
     city: 'city',
-    windSpeed: 0,
+    windSpeed: '',
     humidity: 0,
     description: 'description',
     maxTemperature: 0,
