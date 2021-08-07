@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: Divider(
-                      color: Colors.black,
+                      color: textColor,
                       thickness: 2.0,
                       indent: 25.0,
                       endIndent: 25.0,
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: Divider(
-                      color: Colors.black,
+                      color: textColor,
                       thickness: 2.0,
                       indent: 25.0,
                       endIndent: 25.0,
