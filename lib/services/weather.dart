@@ -47,7 +47,6 @@ class WeatherModel {
   });
 
   static WeatherModel fromJson(Map<String, dynamic> data) {
-    // try {
     double temp = data['main']['temp'];
     int temperature = temp.toInt();
 
@@ -75,9 +74,5 @@ class WeatherModel {
       minTemperature: minTemperature,
       dt: dt,
     );
-    //}
-    // catch (e) {
-    //   return errorWeather;
-    // }
   }
 }
