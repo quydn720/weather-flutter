@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/screens/components/two_headers.dart';
 import 'package:weather_app/screens/search_screen.dart';
 import 'package:weather_app/services/constants.dart';
 import 'package:weather_app/services/weather.dart';
@@ -27,8 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late String icon;
   late String weekday;
   late String dayMonth;
-  late Color textColor;
-  late Color backgroundColor;
+
+  late bool isNight;
+  late bool isSunny;
+  late ThemeKeys key;
   @override
   void initState() {
     super.initState();
@@ -54,175 +57,150 @@ class _HomeScreenState extends State<HomeScreen> {
           .addPattern(DateFormat.DAY)
           .addPattern(DateFormat.MONTH)
           .format(date);
-      bool isNight = (DateTime.fromMicrosecondsSinceEpoch(weather.dt * 1000000)
-              .toUtc()
-              .hour >
-          12);
-      bool isSunny = (weather.temperature > 25);
-      textColor = isNight ? Colors.white : Colors.black;
-      backgroundColor =
-          isNight ? kNightColor : (isSunny ? kSunnyColor : kRainyColor);
+      isNight = (weather.dt > weather.sunset);
+      isSunny = (weather.temperature > 25);
+      key = isNight
+          ? ThemeKeys.nightly
+          : (isSunny ? ThemeKeys.sunny : ThemeKeys.rainy);
     });
+  }
+
+  ThemeData getThemeData(ThemeKeys key) {
+    ThemeData data;
+    switch (key) {
+      case ThemeKeys.nightly:
+        data = ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: kNightColor,
+          textTheme: TextTheme(
+            bodyText2: kTextStyle,
+          ),
+          appBarTheme: AppBarTheme().copyWith(
+            color: kNightColor,
+            elevation: 0,
+          ),
+        );
+        break;
+      case ThemeKeys.sunny:
+        data = ThemeData.light().copyWith(
+          scaffoldBackgroundColor: kSunnyColor,
+          textTheme: TextTheme(
+            bodyText2: kTextStyle,
+          ),
+          appBarTheme: AppBarTheme().copyWith(
+            color: kSunnyColor,
+            elevation: 0,
+          ),
+        );
+        break;
+      case ThemeKeys.rainy:
+        data = ThemeData.light().copyWith(
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: kRainyColor,
+          textTheme:
+              TextTheme(bodyText2: kTextStyle.copyWith(color: Colors.black)),
+          appBarTheme: AppBarTheme().copyWith(
+            color: kRainyColor,
+            actionsIconTheme: IconThemeData().copyWith(color: Colors.black),
+            iconTheme: IconThemeData().copyWith(color: Colors.black),
+            elevation: 0,
+          ),
+        );
+        break;
+    }
+    return data;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          backgroundColor: backgroundColor,
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: backgroundColor,
-            leading: IconButton(
-              icon: Icon(Icons.list, color: textColor),
-              onPressed: () {},
+    return Theme(
+      data: getThemeData(key),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: buildAppBar(context),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TwoHeaders(
+                  title: weekday,
+                  subtitle: dayMonth,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  thickness: 2.0,
+                  indent: kDividerOffset,
+                  endIndent: kDividerOffset,
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: getIconFromNetwork(icon)),
+                      Expanded(
+                        flex: 3,
+                        child: FittedBox(child: Text(temp.toString())),
+                      ),
+                      Expanded(child: Text(description)),
+                    ],
+                  ),
+                ),
+                Divider(
+                  thickness: 2.0,
+                  indent: kDividerOffset,
+                  endIndent: kDividerOffset,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TwoHeaders(title: maxTemp, subtitle: minTemp),
+                    TwoHeaders(
+                      title: '${humidity.toString()}% Humidity',
+                      subtitle: '${windSpeed.toString()} m/s Wind',
+                    ),
+                  ],
+                ),
+              ],
             ),
-            centerTitle: true,
-            title: Text(
-              '$city, $country',
-              style: TextStyle().copyWith(color: textColor),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.search, color: textColor),
-                onPressed: () async {
-                  var city = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchScreen()),
-                  );
-                  if (city != null) {
-                    var weatherData =
-                        await WeatherService().getWeatherByCity(city);
-                    weather = WeatherModel.fromJson(weatherData);
-                    updateUI(weather);
-                  }
-                },
-              ),
-            ],
           ),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            weekday,
-                            style: kBoldTextStyle.copyWith(color: textColor),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            dayMonth,
-                            style: kTextStyle.copyWith(color: textColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: textColor,
-                      thickness: 2.0,
-                      indent: 25.0,
-                      endIndent: 25.0,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 3, child: getIconFromNetwork(icon)),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            temp.toString(),
-                            style: kTextStyle.copyWith(
-                              fontSize: kTextSizeLarge,
-                              color: textColor,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            description,
-                            style: kTextStyle.copyWith(color: textColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: textColor,
-                      thickness: 2.0,
-                      indent: 25.0,
-                      endIndent: 25.0,
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  maxTemp,
-                                  style:
-                                      kBoldTextStyle.copyWith(color: textColor),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(minTemp,
-                                    style:
-                                        kTextStyle.copyWith(color: textColor)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '${humidity.toString()}% Humidity',
-                                  style:
-                                      kBoldTextStyle.copyWith(color: textColor),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '${windSpeed.toString()} m/s Wind',
-                                  style: kTextStyle.copyWith(color: textColor),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )),
+        ),
+      ),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.list),
+        onPressed: () {},
+      ),
+      centerTitle: true,
+      title: Text(
+        '$city, $country',
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () async {
+            var city = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchScreen()),
+            );
+            if (city != null) {
+              var weatherData = await WeatherService().getWeatherByCity(city);
+              weather = WeatherModel.fromJson(weatherData);
+              updateUI(weather);
+            }
+          },
+        ),
+      ],
     );
   }
 

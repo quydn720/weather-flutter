@@ -17,10 +17,9 @@ class TwoHeaders extends StatelessWidget {
       children: [
         Text(
           title,
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        Text(
-          subtitle,
-        ),
+        Text(subtitle),
       ],
     );
   }

@@ -32,8 +32,11 @@ class WeatherModel {
   final String description;
   final String icon;
   final int dt;
-
+  final int sunrise;
+  final int sunset;
   const WeatherModel({
+    required this.sunrise,
+    required this.sunset,
     required this.icon,
     required this.temperature,
     required this.country,
@@ -61,8 +64,12 @@ class WeatherModel {
     String desc = data['weather'][0]['description'];
     String icon = data['weather'][0]['icon'];
     int dt = data['dt'];
+    int sunrise = data['sys']['sunrise'];
+    int sunset = data['sys']['sunset'];
 
     return WeatherModel(
+      sunrise: sunrise,
+      sunset: sunset,
       icon: icon,
       temperature: temperature,
       country: country,

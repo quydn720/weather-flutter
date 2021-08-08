@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return MaterialApp(home: Splash());
         } else {
-          return HomeScreen(weather: snapshot.data);
+          return MaterialApp(home: HomeScreen(weather: snapshot.data));
         }
       },
     );
