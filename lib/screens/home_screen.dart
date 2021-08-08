@@ -82,12 +82,18 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case ThemeKeys.sunny:
         data = ThemeData.light().copyWith(
+          brightness: Brightness.light,
           scaffoldBackgroundColor: kSunnyColor,
           textTheme: TextTheme(
-            bodyText2: kTextStyle,
+            bodyText2: kTextStyle.copyWith(color: Colors.black),
           ),
           appBarTheme: AppBarTheme().copyWith(
-            color: kSunnyColor,
+            color: kRainyColor,
+            textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            actionsIconTheme: IconThemeData().copyWith(color: Colors.black),
+            iconTheme: IconThemeData().copyWith(color: Colors.black),
             elevation: 0,
           ),
         );
@@ -96,10 +102,14 @@ class _HomeScreenState extends State<HomeScreen> {
         data = ThemeData.light().copyWith(
           brightness: Brightness.light,
           scaffoldBackgroundColor: kRainyColor,
-          textTheme:
-              TextTheme(bodyText2: kTextStyle.copyWith(color: Colors.black)),
+          textTheme: TextTheme(
+            bodyText2: kTextStyle.copyWith(color: Colors.black),
+          ),
           appBarTheme: AppBarTheme().copyWith(
             color: kRainyColor,
+            textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.black, fontSize: 20),
+            ),
             actionsIconTheme: IconThemeData().copyWith(color: Colors.black),
             iconTheme: IconThemeData().copyWith(color: Colors.black),
             elevation: 0,
