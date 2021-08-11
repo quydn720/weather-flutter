@@ -1,4 +1,6 @@
-class Weather {
+import 'package:equatable/equatable.dart';
+
+class Weather extends Equatable {
   final double temperature;
   final double minTemperature;
   final double maxTemperature;
@@ -40,4 +42,20 @@ class Weather {
         minTemperature: data['main']['temp_min'],
         dt: data['dt'],
       );
+
+  @override
+  List<Object?> get props => [
+        temperature,
+        minTemperature,
+        maxTemperature,
+        windSpeed,
+        humidity,
+        country,
+        city,
+        description,
+        icon,
+        dt,
+        sunrise,
+        sunset,
+      ];
 }

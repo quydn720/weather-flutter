@@ -47,10 +47,12 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _validate = _text.text.isEmpty;
-                  if (!_validate) Navigator.pop(context, cityName);
-                });
+                setState(
+                  () {
+                    _validate = _text.text.isEmpty;
+                    if (!_validate) Navigator.pop(context, cityName);
+                  },
+                );
               },
               child: Text('Search'),
             )

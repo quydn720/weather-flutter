@@ -1,14 +1,12 @@
 import 'package:weather_app/services/location.dart';
 import 'package:weather_app/services/networking.dart';
-
 import '../apiKey.dart';
 import 'constants.dart';
 
-class WeatherService {
+class WeatherRepository {
   Future<dynamic> getWeatherByLocation() async {
     Location location = Location();
     await location.getCurrentLocation();
-
     NetworkHelper networkHelper = NetworkHelper(
         'https://$openWeatherMapUri?lat=${location.lat}&lon=${location.lon}&appid=$apiKey&units=metric');
     return await networkHelper.getData();

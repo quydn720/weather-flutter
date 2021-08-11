@@ -1,43 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/bloc/weather_bloc.dart';
 import 'package:weather_app/screens/home_screen.dart';
-import 'package:weather_app/screens/splash_screen.dart';
-import 'package:weather_app/services/weather.dart';
+import 'package:weather_app/services/weather_repository.dart';
 
 void main() {
-  runApp(MaterialApp(home: MyApp()));
+  final WeatherRepository weatherRepository = WeatherRepository();
+
+  runApp(MyApp(
+    weatherRepository: weatherRepository,
+  ));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+class MyApp extends StatelessWidget {
+  final WeatherRepository weatherRepository;
 
-class _MyAppState extends State<MyApp> {
-  final WeatherService weatherService = WeatherService();
-  late Future<WeatherModel> weather;
-
-  Future<WeatherModel> getInitialData() async {
-    var location = await weatherService.getWeatherByLocation();
-    return WeatherModel.fromJson(location);
-  }
-
-  @override
-  void initState() {
-    weather = getInitialData();
-    super.initState();
-  }
+  const MyApp({Key? key, required this.weatherRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: weather,
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(home: Splash());
-        } else {
-          return MaterialApp(home: HomeScreen(weather: snapshot.data));
-        }
-      },
+    return MaterialApp(
+      home: BlocProvider<WeatherBloc>(
+        create: (context) {
+          return WeatherBloc(weatherRepository: weatherRepository);
+        },
+        child: HomeScreen(),
+      ),
     );
   }
 }

@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 
-class Location {
-  late double lon;
-  late double lat;
+class Location extends Equatable {
+  late final double lon;
+  late final double lat;
 
   Future<void> getCurrentLocation() async {
     try {
@@ -17,4 +18,7 @@ class Location {
   Future<Position> _determinePosition() async {
     return await Geolocator.getCurrentPosition();
   }
+
+  @override
+  List<Object?> get props => [lon, lat];
 }
