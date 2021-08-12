@@ -134,7 +134,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 } else {
                   var error = state as WeatherFailed;
-                  return Text(error.errorMessage);
+                  return Center(child: Text(error.errorMessage));
                 }
               },
             ),

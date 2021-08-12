@@ -1,15 +1,7 @@
-import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/utils/failure.dart';
 
-class Failure {
-  final String errorMessage;
-  Failure(this.errorMessage);
-
-  @override
-  String toString() => errorMessage;
-}
-
-class Location extends Equatable {
+class Location {
   late final double lon;
   late final double lat;
 
@@ -29,7 +21,4 @@ class Location extends Equatable {
   Future<Position> _determinePosition() async {
     return await Geolocator.getCurrentPosition();
   }
-
-  @override
-  List<Object?> get props => [lon, lat];
 }
