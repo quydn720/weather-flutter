@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:weather_app/models/weather.dart';
-import 'package:weather_app/services/location.dart';
 import 'package:weather_app/services/weather_repository.dart';
 
 part 'weather_event.dart';
