@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -23,8 +24,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       try {
         final data = await weatherRepository.getWeatherByLocation();
         yield WeatherSuccessful(weather: Weather.fromJson(data));
-      } catch (e) {
-        yield WeatherFailed();
+      } on SocketException {
+        yield WeatherFailed('Check again your connection.');
       }
     } else if (event is WeatherEventCityRequested) {
       yield WeatherLoading();
@@ -32,7 +33,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         final data = await weatherRepository.getWeatherByCity(event.city);
         yield WeatherSuccessful(weather: Weather.fromJson(data));
       } catch (e) {
-        yield WeatherFailed();
+        print(e);
+        yield WeatherFailed('Opps... There are some error.');
       }
     } else if (event is WeatherEventRefresh) {
       try {
@@ -40,7 +42,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         Weather.fromJson(data);
         yield WeatherSuccessful(weather: Weather.fromJson(data));
       } catch (e) {
-        yield WeatherFailed();
+        print(e);
+        yield WeatherFailed('Opps... There are some error.');
       }
     }
   }

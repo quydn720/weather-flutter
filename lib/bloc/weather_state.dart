@@ -19,4 +19,10 @@ class WeatherSuccessful extends WeatherState {
   List<Object?> get props => [weather];
 }
 
-class WeatherFailed extends WeatherState {}
+class WeatherFailed extends WeatherState {
+  final String errorMessage;
+
+  WeatherFailed(this.errorMessage);
+  @override
+  List<Object?> get props => [errorMessage];
+}

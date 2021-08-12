@@ -1,7 +1,7 @@
 import 'package:weather_app/services/location.dart';
 import 'package:weather_app/services/networking.dart';
-import '../apiKey.dart';
-import 'constants.dart';
+import '../utils/apiKey.dart';
+import '../utils/constants.dart';
 
 class WeatherRepository {
   Future<dynamic> getWeatherByLocation() async {

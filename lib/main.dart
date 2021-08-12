@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: BlocProvider<WeatherBloc>(
         create: (context) {
-          return WeatherBloc(weatherRepository: weatherRepository);
+          return WeatherBloc(weatherRepository: weatherRepository)
+            ..add(WeatherEventRequested());
         },
         child: HomeScreen(),
       ),

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/services/constants.dart';
-import 'package:weather_app/services/weather.dart';
+import 'package:weather_app/utils/constants.dart';
+
+import 'models/weather.dart';
 
 enum AppThemeKeys { sunny, rainy, nightly }
 
@@ -34,10 +35,10 @@ class ThemeProvider extends ChangeNotifier {
 }
 
 class WeatherData extends ChangeNotifier {
-  late WeatherModel _weather;
-  WeatherModel get weather => _weather;
+  late Weather _weather;
+  Weather get weather => _weather;
 
-  void setWeather(WeatherModel w) {
+  void setWeather(Weather w) {
     _weather = w;
     notifyListeners();
   }

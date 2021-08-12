@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/bloc/weather_bloc.dart';
+import 'package:weather_app/models/weather.dart';
 import 'package:weather_app/screens/components/two_headers.dart';
 import 'package:weather_app/screens/search_screen.dart';
-import 'package:weather_app/services/constants.dart';
+import 'package:weather_app/utils/constants.dart';
 
 class HomeScreen extends StatelessWidget {
   // late final ThemeKeys _key;
@@ -19,32 +20,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime date = DateTime.now();
-
-    AppBar buildAppBar(BuildContext context, String title) {
-      return AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.list),
-          onPressed: () {},
-        ),
-        centerTitle: true,
-        title: Text(title),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () async {
-              var city = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-              if (city != null) {
-                BlocProvider.of<WeatherBloc>(context)
-                    .add(WeatherEventCityRequested(city: city));
-              }
-            },
-          ),
-        ],
-      );
-    }
 
     ThemeData getThemeData(ThemeKeys key) {
       ThemeData data;
@@ -103,22 +78,11 @@ class HomeScreen extends StatelessWidget {
       return data;
     }
 
-    String formattedTemp(double temp) => '${temp.toInt().toString()}°';
-
-    Image getIconFromNetwork(String icon) {
-      return icon == 'icon'
-          ? Image.asset('assets/sunny.png')
-          : Image.network('http://openweathermap.org/img/wn/$icon@2x.png');
-    }
-
     return BlocConsumer<WeatherBloc, WeatherState>(listener: (context, state) {
       // TODO: implement listener
     }, builder: (context, state) {
       return BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
         if (state is WeatherInitial) {
-          // TODO: find the practice for this
-          BlocProvider.of<WeatherBloc>(context)
-              .add(WeatherEventCityRequested(city: 'Ho Chi Minh'));
           return Center(child: CircularProgressIndicator());
         }
         if (state is WeatherLoading) {
@@ -126,82 +90,137 @@ class HomeScreen extends StatelessWidget {
         }
         if (state is WeatherSuccessful) {
           var weather = state.weather;
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: buildAppBar(context, '${weather.city}, ${weather.country}'),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TwoHeaders(
-                      title: DateFormat()
-                          .addPattern(DateFormat.WEEKDAY)
-                          .format(date),
-                      subtitle: DateFormat()
-                          .addPattern(DateFormat.DAY)
-                          .addPattern(DateFormat.MONTH)
-                          .format(date),
+          return Body(
+            weather: weather,
+            date: date,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TwoHeaders(
+                    title: DateFormat()
+                        .addPattern(DateFormat.WEEKDAY)
+                        .format(date),
+                    subtitle: DateFormat()
+                        .addPattern(DateFormat.DAY)
+                        .addPattern(DateFormat.MONTH)
+                        .format(date),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Divider(
+                      thickness: 2.0,
+                      indent: kDividerOffset,
+                      endIndent: kDividerOffset,
                     ),
-                    SizedBox(
-                      height: 20,
-                      child: Divider(
-                        thickness: 2.0,
-                        indent: kDividerOffset,
-                        endIndent: kDividerOffset,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(child: getIconFromNetwork(weather.icon)),
-                          Expanded(
-                            flex: 3,
-                            child: FittedBox(
-                              child: Text(
-                                formattedTemp(weather.temperature),
-                              ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: getIconFromNetwork(weather.icon)),
+                        Expanded(
+                          flex: 3,
+                          child: FittedBox(
+                            child: Text(
+                              formattedTemp(weather.temperature),
                             ),
                           ),
-                          Expanded(
-                            child: Text(weather.description),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                      child: Divider(
-                        thickness: 2.0,
-                        indent: kDividerOffset,
-                        endIndent: kDividerOffset,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TwoHeaders(
-                          title: formattedTemp(weather.maxTemperature),
-                          subtitle: formattedTemp(weather.minTemperature),
                         ),
-                        TwoHeaders(
-                          title: '${weather.humidity}% Humidity',
-                          subtitle: '${weather.windSpeed} m/s Wind',
+                        Expanded(
+                          child: Text(weather.description),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                    child: Divider(
+                      thickness: 2.0,
+                      indent: kDividerOffset,
+                      endIndent: kDividerOffset,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TwoHeaders(
+                        title: formattedTemp(weather.maxTemperature),
+                        subtitle: formattedTemp(weather.minTemperature),
+                      ),
+                      TwoHeaders(
+                        title: '${weather.humidity}% Humidity',
+                        subtitle: '${weather.windSpeed} m/s Wind',
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
         } else {
-          return Text('error');
+          var error = state as WeatherFailed;
+          return Text(error.errorMessage);
         }
       });
     });
+  }
+
+  Image getIconFromNetwork(String icon) {
+    return icon == 'icon'
+        ? Image.asset('assets/sunny.png')
+        : Image.network('http://openweathermap.org/img/wn/$icon@2x.png');
+  }
+
+  String formattedTemp(double temp) => '${temp.toInt().toString()}°';
+}
+
+class Body extends StatelessWidget {
+  const Body({
+    Key? key,
+    required this.weather,
+    required this.date,
+    required this.child,
+  }) : super(key: key);
+
+  final Weather weather;
+  final DateTime date;
+  final Widget child;
+
+  AppBar buildAppBar(BuildContext context, String title) {
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.list),
+        onPressed: () {},
+      ),
+      centerTitle: true,
+      title: Text(title),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () async {
+            var city = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchScreen()),
+            );
+            if (city != null) {
+              BlocProvider.of<WeatherBloc>(context)
+                  .add(WeatherEventCityRequested(city: city));
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: buildAppBar(context, '${weather.city}, ${weather.country}'),
+      body: SafeArea(child: child),
+    );
   }
 }
